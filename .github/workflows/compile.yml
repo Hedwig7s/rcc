@@ -37,3 +37,18 @@ jobs:
       with:
         name: ${{ runner.os == 'Windows' && 'rcc-win' || 'rcc-linux' }}
         path: '${{ github.workspace }}/build/'
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4.1.4
+        with:
+          merge-multiple: true
+      - name: Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            *
